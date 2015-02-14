@@ -1,0 +1,28 @@
+{
+  "name": "interestdb",
+  "version": "1.0.0",
+  "description": "interest database",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emkay/interestdb.git"
+  },
+  "keywords": [
+    "database"
+  ],
+  "author": "Michael Matuzak",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/emkay/interestdb/issues"
+  },
+  "homepage": "https://github.com/emkay/interestdb",
+  "dependencies": {
+    "level-incr": "0.0.3",
+    "level-sublevel": "^6.4.5",
+    "leveldown": "^0.10.4",
+    "levelup": "^0.19.0"
+  }
+}
