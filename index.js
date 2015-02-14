@@ -1,6 +1,7 @@
 var Writable = require('stream').Writable;
 var levelup = require('levelup');
 var incr = require('level-incr');
+var Stats = require('fast-stats').Stats;
 
 function Interest(options) {
     var self = this;
@@ -15,8 +16,10 @@ function Interest(options) {
     }
 
     self.options.sep = self.options.sep || '\n';
+    var dbName = self.options.dbName || 'interestdb';
 
-    self.db = incr(levelup('./interestdb'));
+    self.stats = new Stats();
+    self.db = incr(levelup(dbName));
     self._ws = Writable();
 
     return function thing(k, v) {
@@ -61,4 +64,28 @@ Interest.prototype.createReadStream = function () {
     return rs;
 };
 
+Interest.prototype.count = function (v, cb) {
+    var self = this;
+    if (typeof v === 'function') {
+        cb = v;
+    } else {
+        self.value = v;
+    }
+
+    if (!self.key || !self.value) {
+        throw new Error('Key and Value must be set');
+    }
+    var namespace = [self.key, self.value, 'count'].join(':');
+    self.db.get(namespace, cb);
+};
+
+Interest.prototype.like = function (v) {
+    var self = this;
+    if (!self.key || !self.value) {
+        throw new Error('Key and Value must be set');
+    }
+
+    var namespace = [self.key, self.value, 'count'].join(':');
+    self.db.incr(namespace);
+};
 module.exports = Interest;

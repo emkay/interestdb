@@ -4,7 +4,7 @@
   "description": "interest database",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tape tests/*.js"
   },
   "repository": {
     "type": "git",
@@ -20,9 +20,13 @@
   },
   "homepage": "https://github.com/emkay/interestdb",
   "dependencies": {
+    "fast-stats": "0.0.2",
     "level-incr": "0.0.3",
     "level-sublevel": "^6.4.5",
     "leveldown": "^0.10.4",
     "levelup": "^0.19.0"
+  },
+  "devDependencies": {
+    "tape": "^3.5.0"
   }
 }

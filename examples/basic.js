@@ -6,7 +6,11 @@ var likes = fs.createReadStream(__dirname + '/likes.txt');
 var dbStream = db('mike').createWriteStream();
 likes.pipe(dbStream);
 
-var counts = db('mike').createReadStream();
-counts.on('data', function (data) {
+db('mike').count('cats', function (err, data) {
+    console.log(data);
+});
+
+var rs = db('mike').createReadStream();
+rs.on('data', function (data) {
     console.log(data);
 });
