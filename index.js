@@ -1,5 +1,6 @@
 var Writable = require('stream').Writable;
 var levelup = require('levelup');
+var sublevel = require('level-sublevel');
 var incr = require('level-incr');
 var Stats = require('fast-stats').Stats;
 
@@ -19,7 +20,7 @@ function Interest(options) {
     var dbName = self.options.dbName || 'interestdb';
 
     self.stats = new Stats();
-    self.db = incr(levelup(dbName));
+    self.db = sublevel(levelup(dbName));
     self._ws = Writable();
 
     return function thing(k, v) {
@@ -45,8 +46,8 @@ Interest.prototype.createWriteStream = function () {
         var likes = chunk.toString().split(self.options.sep);
         likes.forEach(function (like) {
             if (like) {
-                var namespace = [self.key, like, 'count'].join(':');
-                self.db.incr(namespace);
+                var sub = incr(self.db.sublevel(self.key));
+                sub.incr(like);
             }
         });
         next();
@@ -60,7 +61,7 @@ Interest.prototype.createReadStream = function () {
         throw new Error('Key must be set');
     }
 
-    var rs = self.db.createReadStream();
+    var rs = self.db.sublevel(self.key).createReadStream();
     return rs;
 };
 
@@ -75,8 +76,8 @@ Interest.prototype.count = function (v, cb) {
     if (!self.key || !self.value) {
         throw new Error('Key and Value must be set');
     }
-    var namespace = [self.key, self.value, 'count'].join(':');
-    self.db.get(namespace, cb);
+    var sub = self.db.sublevel(self.key);
+    sub.get(self.value, cb);
 };
 
 Interest.prototype.like = function (v) {
@@ -85,7 +86,7 @@ Interest.prototype.like = function (v) {
         throw new Error('Key and Value must be set');
     }
 
-    var namespace = [self.key, self.value, 'count'].join(':');
-    self.db.incr(namespace);
+    var sub = self.db.sublevel(self.key);
+    sub.incr(self.value);
 };
 module.exports = Interest;
