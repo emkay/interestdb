@@ -1,14 +1,12 @@
 var test = require('tape');
 var rimraf = require('rimraf');
+var fs = require('fs');
 var InterestDb = require('..');
 
-var db;
-
-rimraf.sync(__dirname + '/testdb');
+var db = InterestDb({dbName: __dirname + '/testdb'});
 
 test('db setup', function (t) {
     t.plan(1);
-    db = InterestDb({dbName: __dirname + '/testdb'});
     t.ok(db);
 });
 
@@ -25,3 +23,17 @@ test('likes and counts', function (t) {
         });
     });
 });
+
+test('streams', function (t) {
+    t.plan(1);
+
+    var ws = db('arjan').createWriteStream();
+    var rs = db('arjan').createReadStream();
+    rs.on('data', function (data) {
+        t.deepEqual(data, {key: 'mutton', value: '1'}, 'read mutton stream');
+    });
+
+    ws.write('mutton');
+});
+
+rimraf(__dirname + '/testdb', function () {});

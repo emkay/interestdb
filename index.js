@@ -94,4 +94,10 @@ Interest.prototype.likes = function (v, cb) {
     var sub = incr(self.db.sublevel(self.key));
     sub.incr(self.value, cb);
 };
+
+Interest.prototype.close = function (cb) {
+    var self = this;
+    cb = cb || function(){};
+    self.db.close(cb);
+};
 module.exports = Interest;
