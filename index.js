@@ -80,13 +80,18 @@ Interest.prototype.count = function (v, cb) {
     sub.get(self.value, cb);
 };
 
-Interest.prototype.like = function (v) {
+Interest.prototype.likes = function (v, cb) {
     var self = this;
+    if (typeof v === 'function') {
+        cb = v;
+    } else {
+        self.value = v;
+    }
     if (!self.key || !self.value) {
         throw new Error('Key and Value must be set');
     }
 
-    var sub = self.db.sublevel(self.key);
-    sub.incr(self.value);
+    var sub = incr(self.db.sublevel(self.key));
+    sub.incr(self.value, cb);
 };
 module.exports = Interest;
