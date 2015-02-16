@@ -20,7 +20,7 @@ function Interest(options) {
     var dbName = self.options.dbName || 'interestdb';
 
     self.stats = new Stats();
-    self.db = sublevel(levelup(dbName));
+    self.db = incr(sublevel(levelup(dbName)));
     self._ws = Writable();
 
     return function thing(k, v) {
@@ -47,7 +47,9 @@ Interest.prototype.createWriteStream = function () {
         likes.forEach(function (like) {
             if (like) {
                 var sub = incr(self.db.sublevel(self.key));
-                sub.incr(like);
+                sub.incr(like, function (err, c) {
+                    self.db.put(like, c);
+                });
             }
         });
         next();
@@ -92,7 +94,21 @@ Interest.prototype.likes = function (v, cb) {
     }
 
     var sub = incr(self.db.sublevel(self.key));
-    sub.incr(self.value, cb);
+    sub.incr(self.value, function (err, c) {
+        self.db.put(self.value, c, cb);
+    });
+};
+
+Interest.prototype.keys = function (cb) {
+    var self = this;
+    var keys = [];
+    var rs = self.db.createReadStream();
+    rs.on('data', function (data) {
+        keys.push(data.key);
+    });
+    rs.on('end', function () {
+        cb(null, keys);
+    });
 };
 
 Interest.prototype.close = function (cb) {
@@ -100,4 +116,5 @@ Interest.prototype.close = function (cb) {
     cb = cb || function(){};
     self.db.close(cb);
 };
+
 module.exports = Interest;
