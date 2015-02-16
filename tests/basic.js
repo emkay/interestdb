@@ -36,4 +36,11 @@ test('streams', function (t) {
     ws.write('mutton');
 });
 
+test('keys', function (t) {
+    t.plan(1);
+    db().keys(function (err, keys) {
+        t.deepEqual(keys, ['cats', 'mutton'], 'keys should equal');
+    });
+});
+
 rimraf(__dirname + '/testdb', function () {});
