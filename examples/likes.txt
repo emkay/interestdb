@@ -2,3 +2,11 @@ cats
 pizza
 tacos
 cats
+apple
+dog
+dog
+tree
+milk
+bacon
+chocolate
+wombat

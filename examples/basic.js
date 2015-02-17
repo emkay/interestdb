@@ -16,3 +16,6 @@ var rs = db('mike').createReadStream();
 rs.on('data', function (data) {
     console.log(data);
 });
+
+db('sara').likes('cats');
+db().stddev(console.log);

@@ -19,7 +19,6 @@ function Interest(options) {
     self.options.sep = self.options.sep || '\n';
     var dbName = self.options.dbName || 'interestdb';
 
-    self.stats = new Stats();
     self.db = incr(sublevel(levelup(dbName)));
     self._ws = Writable();
 
@@ -111,10 +110,47 @@ Interest.prototype.keys = function (cb) {
     });
 };
 
+Interest.prototype.keysAndValues = function (cb) {
+    var self = this;
+    var keysAndValues = [];
+    var rs = self.db.createReadStream();
+    rs.on('data', function (data) {
+        keysAndValues.push(data);
+    });
+    rs.on('end', function () {
+        cb(null, keysAndValues);
+    });
+};
+
+Interest.prototype.values = function (cb) {
+    var self = this;
+    var values = [];
+    var rs = self.db.createReadStream();
+    rs.on('data', function (data) {
+        values.push(data.value);
+    });
+    rs.on('end', function () {
+        console.log('VALUES: ', values);
+        cb(values);
+    });
+};
+
+
 Interest.prototype.close = function (cb) {
     var self = this;
     cb = cb || function(){};
     self.db.close(cb);
+};
+
+Interest.prototype.stddev = function (cb) {
+    var self = this;
+    var stats = new Stats();
+    self.values(function (data) {
+        data.forEach(function (value) {
+            stats.push(Number(value));
+        });
+        cb(stats.stddev());
+    });
 };
 
 module.exports = Interest;
