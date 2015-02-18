@@ -36,10 +36,18 @@ test('streams', function (t) {
     ws.write('mutton');
 });
 
-test('keys', function (t) {
-    t.plan(1);
+test('keys and values', function (t) {
+    t.plan(3);
     db().keys(function (err, keys) {
         t.deepEqual(keys, ['cats', 'mutton'], 'keys should equal');
+    });
+
+    db().values(function (err, values) {
+        t.deepEqual(values, ['1', '2'], 'values should equal');
+    });
+
+    db().keysAndValues(function (err, keysAndValues) {
+        t.deepEqual(keysAndValues, [{key: 'cats', value: '1'}, {key: 'mutton', value: '2'}], 'keysAndValues should equal');
     });
 });
 

@@ -130,8 +130,7 @@ Interest.prototype.values = function (cb) {
         values.push(data.value);
     });
     rs.on('end', function () {
-        console.log('VALUES: ', values);
-        cb(values);
+        cb(null, values);
     });
 };
 

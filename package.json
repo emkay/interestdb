@@ -4,6 +4,7 @@
   "description": "interest database",
   "main": "index.js",
   "scripts": {
+    "cover": "istanbul cover --dir ${COVERAGE_DIR:-coverage} tape -- tests/*.js",
     "test": "tape tests/*.js"
   },
   "repository": {
@@ -27,6 +28,7 @@
     "levelup": "^0.19.0"
   },
   "devDependencies": {
+    "istanbul": "^0.3.5",
     "rimraf": "^2.2.8",
     "tape": "^3.5.0"
   }
