@@ -58,11 +58,12 @@ Interest.prototype.createWriteStream = function () {
 
 Interest.prototype.createReadStream = function () {
     var self = this;
+    var rs;
     if (!self.key) {
-        throw new Error('Key must be set');
+        rs = self.db.createReadStream();
+    } else {
+        rs = self.db.sublevel(self.key).createReadStream();
     }
-
-    var rs = self.db.sublevel(self.key).createReadStream();
     return rs;
 };
 
