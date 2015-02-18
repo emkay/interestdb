@@ -145,11 +145,11 @@ Interest.prototype.close = function (cb) {
 Interest.prototype.stddev = function (cb) {
     var self = this;
     var stats = new Stats();
-    self.values(function (data) {
+    self.values(function (err, data) {
         data.forEach(function (value) {
             stats.push(Number(value));
         });
-        cb(stats.stddev());
+        cb(null, stats.stddev());
     });
 };
 

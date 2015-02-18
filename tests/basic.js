@@ -51,4 +51,11 @@ test('keys and values', function (t) {
     });
 });
 
+test('stddev', function (t) {
+    t.plan(1);
+    db().stddev(function (err, value) {
+        t.equal(value, 0.5);
+    });
+});
+
 rimraf(__dirname + '/testdb', function () {});
