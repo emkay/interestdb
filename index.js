@@ -153,4 +153,16 @@ Interest.prototype.stddev = function (cb) {
     });
 };
 
+Interest.prototype.zscore = function (x, cb) {
+    var self = this;
+    var stats = new Stats();
+    self.values(function (err, data) {
+        data.forEach(function (value) {
+            stats.push(Number(value));
+        });
+        var z = (x - stats.amean()) / stats.stddev();
+        cb(null, z);
+    });
+};
+
 module.exports = Interest;
