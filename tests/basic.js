@@ -62,3 +62,11 @@ test('stddev', function (t) {
         t.equal(value, 0.5);
     });
 });
+
+test('zscore', function (t) {
+    t.plan(1);
+
+    db().zscore(5, function (err, value) {
+        t.equal(value, 7, 'zscore should be correct');
+    });
+});
