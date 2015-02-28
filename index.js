@@ -76,7 +76,7 @@ Interest.prototype.count = function (v, cb) {
     }
 
     if (!self.key || !self.value) {
-        throw new Error('Key and Value must be set');
+        cb(new Error('`key` and `value` must be set'));
     }
     var sub = self.db.sublevel(self.key);
     sub.get(self.value, cb);
@@ -90,7 +90,7 @@ Interest.prototype.likes = function (v, cb) {
         self.value = v;
     }
     if (!self.key || !self.value) {
-        throw new Error('Key and Value must be set');
+        cb(new Error('`key` or `value` must be set'));
     }
 
     var sub = incr(self.db.sublevel(self.key));
