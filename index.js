@@ -18,8 +18,8 @@ function Interest(options) {
 
     self.options.sep = self.options.sep || '\n';
     var dbName = self.options.dbName || 'interestdb';
-
-    self.db = incr(sublevel(levelup(dbName)));
+    var dbModule = self.options.memdown ? 'memdown' : 'leveldown';
+    self.db = incr(sublevel(levelup(dbName, {db: require(dbModule)})));
     self._ws = Writable();
 
     return function thing(k, v) {

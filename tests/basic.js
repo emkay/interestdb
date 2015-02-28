@@ -2,11 +2,14 @@ var test = require('tape');
 var rimraf = require('rimraf');
 var fs = require('fs');
 var InterestDb = require('..');
-
-var db = InterestDb({dbName: __dirname + '/testdb'});
+var db;
 
 test('db setup', function (t) {
     t.plan(1);
+    db = InterestDb({
+        dbName: __dirname + '/testdb',
+        memdown: true
+    });
     t.ok(db);
 });
 
@@ -38,6 +41,7 @@ test('streams', function (t) {
 
 test('keys and values', function (t) {
     t.plan(3);
+
     db().keys(function (err, keys) {
         t.deepEqual(keys, ['cats', 'mutton'], 'keys should equal');
     });
@@ -53,9 +57,8 @@ test('keys and values', function (t) {
 
 test('stddev', function (t) {
     t.plan(1);
+
     db().stddev(function (err, value) {
         t.equal(value, 0.5);
     });
 });
-
-rimraf(__dirname + '/testdb', function () {});
